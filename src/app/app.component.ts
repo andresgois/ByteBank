@@ -6,5 +6,12 @@ import { Component } from '@angular/core';
   styleUrls: ['./app.component.scss']
 })
 export class AppComponent {
-  title = 'angular-alura-app';
+
+    transferi: any = {};
+  
+    transferir($event: any){
+        console.log($event)
+        this.transferi = $event
+    }
+
 }

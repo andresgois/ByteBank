@@ -1,27 +1,83 @@
-# AngularAluraApp
+# App Byte Bank
 
-This project was generated with [Angular CLI](https://github.com/angular/angular-cli) version 13.2.0.
+## Instalação
+- npm install -g @angular/cli
+- ng new bytebank
+- cd bytebank
+- ng serve --open
+- [Acessar local](http://localhost:4200)
 
-## Development server
+- *Desativando o Strict Mode*
+    - Fazer algumas modificações no arquivo tsconfig.json
+    - O arquivo ficará assim:
+```
+{
+  "compileOnSave": false,
+  "compilerOptions": {
+    "baseUrl": "./",
+    "outDir": "./dist/out-tsc",
+    "sourceMap": true,
+    "declaration": false,
+    "downlevelIteration": true,
+    "experimentalDecorators": true,
+    "moduleResolution": "node",
+    "importHelpers": true,
+    "target": "es2017",
+    "module": "es2020",
+    "lib": [
+      "es2020",
+      "dom"
+    ]
+  }
+}
+```
+- Estrutura de pastas
+    - /.angular
+    - /.vscode
+    - /node_modules
+    - /src
+        - /app
+        - /assets
+        - /enviroments
+        - favicon.ico
+        - index.html
+        - main.ts
+        - polyfills.ts
+        - styles.scss
+        - test.ts
+    - .browserslistrc
+    - .editorconfig
+    - angular.json
+    - karma.config.js
+    - package-lock.json
+    - package.json
+    - README.md
+    - tsconfig.app.json
+    - tsconfig.json
+    - tsconfig.spec.json
 
-Run `ng serve` for a dev server. Navigate to `http://localhost:4200/`. The app will automatically reload if you change any of the source files.
+##
+- *Event Biding*
+    - Passa um Binding do evento para uma propriedade do angular
+```
+// No arquivo HTML
+(ngSubmit)="transferir()"
 
-## Code scaffolding
+// No component TS
+    transferir(){
+        console.log("Transferir")
+    }
 
-Run `ng generate component component-name` to generate a new component. You can also use `ng generate directive|pipe|service|class|guard|interface|enum|module`.
+```
+- *property bind*
+    - Passa um valor do template para minha classe
+```
+// No HTML
+[(ngModel)]="valor"
 
-## Build
+// Component .TS
+valor!: number;
+```
 
-Run `ng build` to build the project. The build artifacts will be stored in the `dist/` directory.
-
-## Running unit tests
-
-Run `ng test` to execute the unit tests via [Karma](https://karma-runner.github.io).
-
-## Running end-to-end tests
-
-Run `ng e2e` to execute the end-to-end tests via a platform of your choice. To use this command, you need to first add a package that implements end-to-end testing capabilities.
-
-## Further help
-
-To get more help on the Angular CLI use `ng help` or go check out the [Angular CLI Overview and Command Reference](https://angular.io/cli) page.
+## Exportando dados com output
+- Enviando do componente filho para o pai
