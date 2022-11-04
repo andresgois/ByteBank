@@ -1,5 +1,14 @@
 # App Byte Bank
 
+## Telas
+- Cadastro das transferências
+
+![Cadastro](./imagens/nova.png)
+
+- Tabelas com todas as transferências feitas
+
+![Transferências](./imagens/transferencia.png)
+
 ## Instalação
 - npm install -g @angular/cli
 - ng new bytebank
