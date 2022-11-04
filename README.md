@@ -81,3 +81,76 @@ valor!: number;
 
 ## Exportando dados com output
 - Enviando do componente filho para o pai
+
+
+## Data no angular
+- Adicionar  ao app.module
+```
+import localePt from '@angular/common/locales/pt';
+
+registerLocaleData(localePt, 'pt');
+
+
+providers: [
+    {provide: LOCALE_ID, useValue: 'pt' },
+    {
+        provide: DEFAULT_CURRENCY_CODE,
+        useValue: 'BRL',
+    },
+],
+```
+- https://angular.io/api/common/DatePipe
+- https://angular.io/api/core/LOCALE_ID
+
+## Mokando os dados
+- https://www.npmjs.com/package/json-server
+- npm install -g json-server
+- Cria arquivo **db.json**
+- Iniciar o json
+```
+json-server --watch db.json
+```
+- com base em um json ele monta a interface para o angular
+- https://jsontots.pages.dev/
+
+### Trabalhando com requisições 
+- Adicionar ao construtor do service
+```
+private httpClient: HttpClient
+```
+- Adicionar ao app.module nos imports
+```
+import { HttpClientModule } from '@angular/common/http';
+
+- imports
+HttpClientModule
+```
+## Tranalhando com Rotas
+- criar arquivo **app-routing.module.ts**
+```
+import { ExtratoComponent } from './extrato/extrato.component';
+import { NgModule } from "@angular/core";
+import { RouterModule } from "@angular/router";
+
+import { Routes } from '@angular/router';
+import { NovaTransferenciaComponent } from './nova-tranferencia/nova-transferencia.component';
+
+export const routes: Routes = [
+    {path: '', redirectTo: 'extrato', pathMatch: 'full' },
+    {path: 'extrato', component: ExtratoComponent},
+    {path: 'nova-transferencia', component: NovaTransferenciaComponent},
+]
+
+@NgModule({
+    imports: [ RouterModule.forRoot(routes)],
+    exports: [RouterModule]
+})
+export class appRoutingModule{
+
+}
+```
+- importa em imports de app.module
+- remove os componentes de app.componente.html e coloca isso
+```
+<router-outlet></router-outlet>
+```
