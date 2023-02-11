@@ -1,5 +1,14 @@
 # App Byte Bank
 
+## Versões do *Angular*
+- Vê a versão: *ng version*
+- Instalar uma nova versão: *npm i @angular/cli@13.2.6*
+
+- **Instalar exatamente a mesma versão do package.json:** - *npm ci*
+- Rodar a aplicação: *ng serve --open*
+- *Necessário instalar o json-server*
+  - Verifica sessão *Mokando dados*
+
 ## Telas
 - Cadastro das transferências
 
