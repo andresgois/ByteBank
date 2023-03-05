@@ -74,28 +74,6 @@
     - tsconfig.json
     - tsconfig.spec.json
 
-##
-- *Event Biding*
-    - Passa um Binding do evento para uma propriedade do angular
-```
-// No arquivo HTML
-(ngSubmit)="transferir()"
-
-// No component TS
-    transferir(){
-        console.log("Transferir")
-    }
-
-```
-- *property bind*
-    - Passa um valor do template para minha classe
-```
-// No HTML
-[(ngModel)]="valor"
-
-// Component .TS
-valor!: number;
-```
 
 ## Exportando dados com output
 - Enviando do componente filho para o pai
@@ -130,6 +108,58 @@ json-server --watch db.json
 ```
 - com base em um json ele monta a interface para o angular
 - https://jsontots.pages.dev/
+
+## FormModule
+- [ForModule](https://v13.angular.io/api/forms/FormsModule)
+- Importar FormModule no *app.module.ts*
+- *Event Biding*
+    - Passa um Binding do evento para uma propriedade do angular
+```
+// No arquivo HTML
+(ngSubmit)="transferir()"
+
+// No component TS
+    transferir(){
+        console.log("Transferir")
+    }
+
+```
+
+```mermaid
+graph TD;
+    A[No arquivo HTML]-->B[No component TS];
+```
+
+- *property bind*
+    - Passa um valor do template para minha classe
+```
+// No HTML
+[(ngModel)]="valor"
+
+// Component .TS
+valor!: number;
+```
+### Data Binding
+- Event binding permite que um evento do DOM seja atribuído a um método do componente.
+
+- Two-way binding
+  - [(ngModel)]="valor"
+    - **Transmite do componente para o template e vice versa**
+    - Two-way data binding garante uma comunicação bidirecional entre o componente e o DOM.
+- Property binding
+  - [ngModel]="destino"
+    - **Apenas valor do componente par o template, não reflete alterações**
+    - Property binding permite que um valor de uma variável seja atribuído ao elemento HTML.
+
+```mermaid
+graph TD;
+    A[Valor do template]-->B[Valor da classe];
+```
+
+
+
+
+
 
 ### Trabalhando com requisições 
 - Adicionar ao construtor do service
