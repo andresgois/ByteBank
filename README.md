@@ -109,9 +109,60 @@ json-server --watch db.json
 - com base em um json ele monta a interface para o angular
 - https://jsontots.pages.dev/
 
+## Montagem da página
+```mermaid
+  graph TB;
+    
+    id3([ app-root ])==>| Monta estrutura |id4([app.component.ts])
+    subgraph id1[HTML]
+        id3([ app-root ])
+    end 
+
+    subgraph id2[TS]
+        direction BT
+        id4([app.component.ts])-->id5([selector])
+        id4([app.component.ts])-->id6([templateUrl])
+        id4([app.component.ts])-->id7([styleUrls])
+    end
+
+    style id1 fill:#ffffde,stroke:#333,stroke-width:4px,color: #400080
+    style id2 fill:#00ffff,stroke:#333,stroke-width:4px,color: #400080
+```
+> Todos os componentes criados devem esta no **app.module.ts**
+```
+@NgModule({
+  declarations: [
+    AppComponent,
+    NovaTransferenciaComponent,
+    ExtratoComponent
+  ],
+  imports: [
+    BrowserModule,
+    FormsModule,
+    HttpClientModule,
+    appRoutingModule
+  ],
+  providers: [
+    {provide: LOCALE_ID, useValue: 'pt' },
+    {
+        provide: DEFAULT_CURRENCY_CODE,
+        useValue: 'BRL',
+    },
+],
+  bootstrap: [AppComponent]
+})
+```
+
 ## FormModule
 - [ForModule](https://v13.angular.io/api/forms/FormsModule)
 - Importar FormModule no *app.module.ts*
+### Ações do formulário
+```mermaid
+    graph TB;
+      id1{{Ao clicar no botão ele dispara o evento de submit}}
+      id3([ ngSubmit ])==>| Invoca |id4([ método: *transferir* ])
+```
+
 - *Event Biding*
     - Passa um Binding do evento para uma propriedade do angular
 ```
@@ -129,20 +180,20 @@ json-server --watch db.json
 graph TD;
     A[No arquivo HTML]-->B[No component TS];
 ```
+### Data Binding
+- Event binding permite que um evento do DOM seja atribuído a um método do componente.
 
-- *property bind*
+#### *property bind*
     - Passa um valor do template para minha classe
 ```
 // No HTML
-[(ngModel)]="valor"
+[ngModel]="valor"
 
 // Component .TS
 valor!: number;
 ```
-### Data Binding
-- Event binding permite que um evento do DOM seja atribuído a um método do componente.
 
-- Two-way binding
+#### Two-way binding
   - [(ngModel)]="valor"
     - **Transmite do componente para o template e vice versa**
     - Two-way data binding garante uma comunicação bidirecional entre o componente e o DOM.
@@ -156,11 +207,18 @@ graph TD;
     A[Valor do template]-->B[Valor da classe];
 ```
 
+#### @Output()
+- Propaga os dados
+```
+// component.ts
+@Output() aoTransferir = new EventEmitter<any>();
 
+const valorEmitir = { valor: this.valor, destino: this.destino };
+this.aoTransferir.emit(valorEmitir);
 
-
-
-
+// HTML
+<app-nova-transferencia (aoTransferir)="transferir($event)"></app-nova-transferencia>
+```
 ### Trabalhando com requisições 
 - Adicionar ao construtor do service
 ```
