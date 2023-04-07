@@ -18,6 +18,10 @@
 
 ![Transferências](./imagens/transferencia.png)
 
+### Demostrativo
+
+![Funcionamento](./imagens/bytebank.gif)
+
 ## Instalação
 - npm install -g @angular/cli
 - ng new bytebank
@@ -97,17 +101,6 @@ providers: [
 ```
 - https://angular.io/api/common/DatePipe
 - https://angular.io/api/core/LOCALE_ID
-
-## Mokando os dados
-- https://www.npmjs.com/package/json-server
-- npm install -g json-server
-- Cria arquivo **db.json**
-- Iniciar o json
-```
-json-server --watch db.json
-```
-- com base em um json ele monta a interface para o angular
-- https://jsontots.pages.dev/
 
 ## Montagem da página
 ```mermaid
@@ -207,6 +200,8 @@ graph TD;
     A[Valor do template]-->B[Valor da classe];
 ```
 
+## Exportando dados do componente
+
 #### @Output()
 - Propaga os dados
 ```
@@ -219,28 +214,139 @@ this.aoTransferir.emit(valorEmitir);
 // HTML
 <app-nova-transferencia (aoTransferir)="transferir($event)"></app-nova-transferencia>
 ```
+
+### Utilizar o metadata @Input() para receber valores em um componente;
+```
+- Extrato.component.ts
+@Input() transferencias: any[] = [];
+
+- html
+ <app-extrato [transferencias]="transferencias"></app-extrato> 
+```
+
+## Transferência
+### Exibir uma lista de dados através da diretiva *ngFor;
+```
+- Extrato.component.html
+<tbody *ngIf="!!transferencias; else listaVazia">
+    <tr class="tabela__linha" *ngFor="let transferencia of transferencias">
+        <td class="tabela__conteudo">
+            {{ transferencia.data | date: "short" }}
+        </td>
+        <td class="tabela__conteudo">{{ transferencia.valor | currency }}</td>
+        <td class="tabela__conteudo">{{ transferencia.destino }}</td>
+    </tr>
+</tbody>
+```
+### Configurar o formato de horas na aplicação.
+```
+- Extrato.component.html
+<td class="tabela__conteudo">{{ transferencia.valor | currency }}</td>
+
+- app.module.ts
+import { LOCALE_ID, DEFAULT_CURRENCY_CODE} from '@angular/core';
+import localePt from '@angular/common/locales/pt';
+
+providers: [
+  {provide: LOCALE_ID, useValue: 'pt' },
+  {
+      provide: DEFAULT_CURRENCY_CODE,
+      useValue: 'BRL',
+  },
+],
+```
+## Services
+### Utilizar a diretiva *ngIf;
+- Caso a lista de transferência esteja vazia ele vai acionat o ng-template através do *#listaVazia*
+```
+<tbody *ngIf="!!transferencias; else listaVazia"></tbody>
+
+<ng-template #listaVazia>
+    <p>Nenhuma operação cadastrada</p>
+</ng-template>
+```
+### Trabalhar com Service
+- faz com que a classe service possa ser injetada no construtor de qualquer classe dentro de *root*
+```
+@Injectable({
+  providedIn: 'root'
+})
+```
+## Comunicação HTTP
+
+### Mokando os dados
+- https://www.npmjs.com/package/json-server
+- npm install -g json-server
+- Cria arquivo **db.json**
+- Iniciar o json
+```
+json-server --watch db.json
+```
+- com base em um json ele monta a interface para o angular
+- https://jsontots.pages.dev/
 ### Trabalhando com requisições 
 - Adicionar ao construtor do service
+- Ela provê métodos de acessoa uma API Rest (GET, POST, DELETE, PUT ...)
 ```
 private httpClient: HttpClient
 ```
-- Adicionar ao app.module nos imports
+
 ```
+// Adicionar ao app.module nos imports
 import { HttpClientModule } from '@angular/common/http';
 
-- imports
+// imports
 HttpClientModule
 ```
-## Tranalhando com Rotas
-- criar arquivo **app-routing.module.ts**
+#### Observable
+- Padrão Observador
+- Retorna a resposta em um momento futuro
+- Assincrono
+- Retorna todas as tranferências
+- *TransferenciaService*
 ```
-import { ExtratoComponent } from './extrato/extrato.component';
-import { NgModule } from "@angular/core";
-import { RouterModule } from "@angular/router";
+todas(): Observable<Transferencia[]> {
+  return this.httpClient.get<Transferencia[]>(this.url);
+}
+```
+- *ExtratoComponent*
+- **subscribe** se inscreve na resposta do método, significa que quando existir uma resposta ele captura.
+```
+ngOnInit(): void {
+  //this.transferencias = this.service.transferencias;
+  this.service.todas().subscribe(
+      (transferencias: Transferencia[]) => {
+          console.table(transferencias);
+          this.transferencias = transferencias;
+      }
+  )
+}
+```
+- O método subscribe recebe opcionalmente 3 parâmetros, o primeiro é a função a ser executada quando tudo estiver correto, o segundo é a função a ser executada quando houver algum erro de qualquer gênero durante a execução e por fim o terceiro parâmetro é invocado quando todo o fluxo estiver sido concluído.
+- **ExtratoComponent**
+```
+ngOnInit(): void {
+  //this.transferencias = this.service.transferencias;
+  this.service.todas().subscribe(
+      (transferencias: Transferencia[]) => {
+          console.table(transferencias);
+          this.transferencias = transferencias;
+      }
+  )
+}
+```
 
-import { Routes } from '@angular/router';
-import { NovaTransferenciaComponent } from './nova-tranferencia/nova-transferencia.component';
-
+## Tranalhando com Rotas
+- Criar arquivo **app-routing.module.ts**
+- Módulo principal *forRoot()*
+- Módulo interno *forChild()*
+- Snippet *a-rout*
+- Descrição das propriedades
+  - **path**: caminho da url
+  - **component**: componente que será chamado
+  - **redirectTo**: redirecionar para uma url
+  - **pathMatch**: redirecionar página por completo
+```
 export const routes: Routes = [
     {path: '', redirectTo: 'extrato', pathMatch: 'full' },
     {path: 'extrato', component: ExtratoComponent},
@@ -251,12 +357,36 @@ export const routes: Routes = [
     imports: [ RouterModule.forRoot(routes)],
     exports: [RouterModule]
 })
-export class appRoutingModule{
-
-}
+export class appRoutingModule{}
 ```
-- importa em imports de app.module
-- remove os componentes de app.componente.html e coloca isso
+- Importa em imports de **app.module**
+- Remove os componentes de **app.componente.html** e coloca isso
 ```
 <router-outlet></router-outlet>
+```
+- **app.component.html**
+- *routerLink* renderiza apenas a parte necessária
+- *href* renderiza toda a página, assim perde o conceita de SPA
+```
+<header>
+    <a routerLink="/">Bytebank</a>
+    <a routerLink="/nova-transferencia" routerLinkActive="ativo">Nova transferência</a>
+</header>
+<main>
+    <router-outlet></router-outlet>
+</main>
+```
+- **NovaTransferenciaComponent**
+- Redireciona a página assim que faz uma transferência
+```
+constructor(private service: TransferenciaService, private router: Router) { }
+
+this.router.navigateByUrl('extrato')
+```
+- **app.component.html**
+- Ocultar link
+- Ativa uma classe CSS, para esse caso o comportamento seria o seguinte: 
+  - Quando esativer nessa url, não será mostrado o link para nova-tranferencia.
+```
+<a routerLink="/nova-transferencia" routerLinkActive="ativo">Nova transferência</a>
 ```
