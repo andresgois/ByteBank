@@ -280,7 +280,7 @@ providers: [
 - Cria arquivo **db.json**
 - Iniciar o json
 ```
-json-server --watch db.json
+json-server --watch .\data\db.json
 ```
 - com base em um json ele monta a interface para o angular
 - https://jsontots.pages.dev/
